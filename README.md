@@ -10,19 +10,35 @@
 
 ## Запуск проекта
 Клонировать репозиторий и перейти в директорию проекта:
-```git clone https://github.com/KonstantinSKS/bs4_parser_pep.git```
-```cd bs4_parser_pep```
+```
+git clone https://github.com/KonstantinSKS/bs4_parser_pep.git
+```
+```
+cd bs4_parser_pep
+```
 Cоздать и активировать виртуальное окружение:
-```python -m venv venv```
+```
+python -m venv venv
+```
 ### Команда для Windows:
-```source venv/Scripts/activate```
+```
+source venv/Scripts/activate
+```
 ### Для Linux и macOS:
-```source venv/bin/activate```
+```
+source venv/bin/activate
+```
 Установить зависимости из файла requirements.txt:
-```python3 -m pip install --upgrade pip```
-```pip install -r requirements.txt```
+```
+python3 -m pip install --upgrade pip
+```
+```
+pip install -r requirements.txt
+```
 Ознакомиться со справкой или запустить проект в нужном режиме:
-```python main.py --help```
+```
+python main.py --help
+```
 или
 ```python main.py [-h] [-c] [-o {pretty,file}] {whats-new, latest-versions, download, pep}```
 Полный список аргументов:
