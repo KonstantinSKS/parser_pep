@@ -14,9 +14,9 @@
 ```cd bs4_parser_pep```
 Cоздать и активировать виртуальное окружение:
 ```python -m venv venv```
-# Команда для Windows:
+### Команда для Windows:
 ```source venv/Scripts/activate```
-# Для Linux и macOS:
+### Для Linux и macOS:
 ```source venv/bin/activate```
 Установить зависимости из файла requirements.txt:
 ```python3 -m pip install --upgrade pip```
