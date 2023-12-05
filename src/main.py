@@ -1,16 +1,15 @@
 import logging
 import re
+from urllib.parse import urljoin
+
 import requests_cache
+from bs4 import BeautifulSoup
+from tqdm import tqdm
 
 from configs import configure_argument_parser, configure_logging
 from constants import BASE_DIR, MAIN_DOC_URL, PEPS_URL, EXPECTED_STATUS
 from outputs import control_output
 from utils import get_response, find_tag
-
-from urllib.parse import urljoin
-
-from bs4 import BeautifulSoup
-from tqdm import tqdm
 
 
 def whats_new(session):
@@ -28,7 +27,7 @@ def whats_new(session):
     results = [('Ссылка на статью', 'Заголовок', 'Редактор, Автор')]
 
     for section in tqdm(sections_by_python):
-        version_a_tag = section.find('a')
+        version_a_tag = find_tag(section, 'a')
         href = version_a_tag['href']
         version_link = urljoin(whats_new_url, href)
         response = get_response(session, version_link)
@@ -103,7 +102,7 @@ def pep(session):
 
     results = [('Статус', 'Количество')]
     status_sum = {}
-    peps_sum = 0
+    logs = []
 
     for tr_tag in tqdm(tr_tags):
         td_tag = find_tag(tr_tag, 'td')
@@ -114,28 +113,23 @@ def pep(session):
         pep_url = urljoin(PEPS_URL, href)
         response = get_response(session, pep_url)
         if response is None:
-            return
+            continue
         soup = BeautifulSoup(response.text, 'lxml')
         dt_tags = soup.find_all('dt')
         for dt_tag in dt_tags:
             if dt_tag.text == 'Status:':
-                peps_sum += 1
                 status = dt_tag.find_next_sibling().text
-                if status in status_sum:
-                    status_sum[status] += 1
-                else:
-                    status_sum[status] = 1
+                status_sum[status] = status_sum.get(status, 0) + 1
                 if status not in EXPECTED_STATUS[preview_status]:
-                    error = (
-                        'Несовпадающие статусы:\n'
-                        f'{pep_url}\n'
-                        f'Статус в картрочке {status}\n'
+                    logs.append((
+                        'Несовпадающие статусы:',
+                        f'{pep_url}',
+                        f'Статус в картрочке {status}',
                         f'Ожидаемые статусы: {EXPECTED_STATUS[preview_status]}'
-                    )
-                    logging.warning(error)
-    for status in status_sum:
-        results.append((status, status_sum[status]))
-    results.append(('Total', peps_sum))
+                    ))
+    logging.warning(''.join('\n'.join(map(str, log)) for log in logs))
+    results.extend([((status, status_sum[status])) for status in status_sum])
+    results.append(('Total', sum(status_sum.values())))
     return results
 
 
