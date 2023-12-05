@@ -40,9 +40,12 @@ pip install -r requirements.txt
 python main.py --help
 ```
 или
-```python main.py [-h] [-c] [-o {pretty,file}] {whats-new, latest-versions, download, pep}```
+```
+python main.py [-h] [-c] [-o {pretty,file}] {whats-new, latest-versions, download, pep}
+```
 Полный список аргументов:
-```usage: main.py [-h] [-c] [-o {pretty,file}] {whats-new,latest-versions,download,pep}
+```
+usage: main.py [-h] [-c] [-o {pretty,file}] {whats-new,latest-versions,download,pep}
 
 Парсер документации Python
 
@@ -54,4 +57,5 @@ optional arguments:
   -h, --help            show this help message and exit
   -c, --clear-cache     Очистка кеша
   -o {pretty,file}, --output {pretty,file}
-                        Дополнительные способы вывода данных```
+                        Дополнительные способы вывода данных
+```
