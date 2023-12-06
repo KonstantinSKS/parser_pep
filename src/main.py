@@ -102,7 +102,6 @@ def pep(session):
 
     results = [('Статус', 'Количество')]
     status_sum = {}
-    logs = []
 
     for tr_tag in tqdm(tr_tags):
         td_tag = find_tag(tr_tag, 'td')
@@ -121,14 +120,14 @@ def pep(session):
                 status = dt_tag.find_next_sibling().text
                 status_sum[status] = status_sum.get(status, 0) + 1
                 if status not in EXPECTED_STATUS[preview_status]:
-                    logs.append((
+                    logs = (
                         'Несовпадающие статусы:',
                         f'{pep_url}',
-                        f'Статус в картрочке {status}',
+                        f'Статус в карточке {status}',
                         f'Ожидаемые статусы: {EXPECTED_STATUS[preview_status]}'
-                    ))
-    logging.warning(''.join('\n'.join(map(str, log)) for log in logs))
-    results.extend([((status, status_sum[status])) for status in status_sum])
+                    )
+    logging.warning('\n'.join(logs))
+    results.extend(status_sum.items())
     results.append(('Total', sum(status_sum.values())))
     return results
 
